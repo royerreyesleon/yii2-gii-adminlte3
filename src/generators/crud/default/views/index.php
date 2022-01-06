@@ -53,6 +53,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= "<?php " ?>
 <?php echo '$urlBase = Url::home(true);'; ?>
+<?php echo '$controller = Yii::$app->controller->id;;'; ?>
+<?php echo '$detalle = Url::to(["detalle"]);'; ?>
+<?php echo '$editar = Url::to(["editar"]);'; ?>
+<?php echo '$anular = Url::to(["anular"]);'; ?>
 <?php $script = '
 $js = <<<SCRIPT
 $(function () {
@@ -73,7 +77,7 @@ $(function () {
       // "responsive": true, "lengthChange": false, "autoWidth": false,
       // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
       "ajax": {
-        "url": "$urlBase/' . Inflector::camel2id(StringHelper::basename($generator->modelClass)) . '/obtener-datos",
+        "url": "$urlBase/$controller/obtener-datos",
     },
     "columns": [
     { "data": "id" },
@@ -82,9 +86,9 @@ $(function () {
         "render":
             function (data, type, row) {
                 return `
-                        <a class="btn btn-sm btn-light" href="detalle?id=${row.id}"><i class="fas fa-eye"></i></a>
-                        <a class="btn btn-sm btn-primary" href="editar?id=${row.id}"><i class="fas fa-edit"></i></a>
-                        <a class="btn btn-sm btn-danger" href="anular?id=${row.id}"><i class="fas fa-trash"></i></a>
+                        <a class="btn btn-sm btn-light" href="$detalle?id=`+row.id+`">Detalle <i class="fas fa-eye"></i></a>
+                        <a class="btn btn-sm btn-primary" href="$editar?id=`+row.id+`">Editar <i class="fas fa-edit"></i></a>
+                        <a class="btn btn-sm btn-danger" href="$anular?id=`+row.id+`" data-confirm="¿Está seguro de anular este registro?" data-method="post">Anular <i class="fas fa-trash"></i></a>
                         `;
             }, "className": "text-right"
         },
