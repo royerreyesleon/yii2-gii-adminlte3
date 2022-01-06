@@ -38,15 +38,16 @@ use yii\data\ActiveDataProvider;
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+
 
 /**
  * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
  */
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
-    /**
-     * @inheritDoc
-     */
+
+    /*
     public function behaviors()
     {
         return array_merge(
@@ -61,12 +62,18 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
             ]
         );
     }
+    */
 
-    /**
-     * Lists all <?= $modelClass ?> models.
-     *
-     * @return string
-     */
+    // WEBVIMARK
+    public function behaviors()
+    {
+        return [
+            'ghost-access'=> [
+                'class' => 'webvimark\modules\UserManagement\components\GhostAccessControl',
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
 <?php if (!empty($generator->searchModelClass)): ?>
@@ -100,83 +107,55 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 <?php endif; ?>
     }
 
-    /**
-     * Displays a single <?= $modelClass ?> model.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView(<?= $actionParams ?>)
+    public function actionDetalle($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel(<?= $actionParams ?>),
+        return $this->render('detalle', [
+            'model' => $this->findModel($id),
         ]);
     }
 
-    /**
-     * Creates a new <?= $modelClass ?> model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
+    public function actionNuevo()
     {
         $model = new <?= $modelClass ?>();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', <?= $urlParams ?>]);
+                return $this->redirect(['detalle', 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();
         }
 
-        return $this->render('create', [
+        return $this->render('nuevo', [
             'model' => $model,
         ]);
     }
 
-    /**
-     * Updates an existing <?= $modelClass ?> model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate(<?= $actionParams ?>)
+    public function actionEditar($id)
     {
-        $model = $this->findModel(<?= $actionParams ?>);
+        $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', <?= $urlParams ?>]);
+            return $this->redirect(['detalle', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
+        return $this->render('editar', [
             'model' => $model,
         ]);
     }
 
-    /**
-     * Deletes an existing <?= $modelClass ?> model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete(<?= $actionParams ?>)
-    {
-        $this->findModel(<?= $actionParams ?>)->delete();
+    public function actionAnular($id)
+    {   
+        /* $this->findModel($id)->delete(); */
+
+        $model = $this->findModel($id);
+        $model->activo = 'NO';
+        $model->save();
 
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the <?= $modelClass ?> model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
-     * @return <?= $modelClass ?> the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel(<?= $actionParams ?>)
+    protected function findModel($id)
     {
 <?php
 $condition = [];
@@ -185,10 +164,28 @@ foreach ($pks as $pk) {
 }
 $condition = '[' . implode(', ', $condition) . ']';
 ?>
-        if (($model = <?= $modelClass ?>::findOne(<?= $condition ?>)) !== null) {
+        if (($model = <?= $modelClass ?>::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException(<?= $generator->generateString('The requested page does not exist.') ?>);
+        throw new NotFoundHttpException(<?= $generator->generateString('La página solicitada no existe.') ?>);
+    }
+
+    public function actionObtenerData()
+    {
+        $model = <?= $modelClass ?>::find()->All();
+
+        $array = [];
+
+        foreach ($model as $key => $value) {
+
+            $array['data'][] = [
+                            'id'     => $value->td_id,
+                            'nombre' => $value->td_id,
+                        ];
+        }
+    
+        return json_encode($array);
+		// return json_encode($array, JSON_UNESCAPED_UNICODE);
     }
 }

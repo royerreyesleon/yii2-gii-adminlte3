@@ -16,8 +16,8 @@ if (empty($safeAttributes)) {
 echo "<?php\n";
 ?>
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap4\Html;
+use yii\bootstrap4\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
@@ -33,8 +33,9 @@ use yii\widgets\ActiveForm;
         echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
     }
 } ?>
-    <div class="form-group">
-        <?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Save') ?>, ['class' => 'btn btn-success']) ?>
+    <div class="form-group text-center">
+        <?= "<?= " ?>Html::a('Cerrar', ['index'], ['class' => 'btn btn-lg btn-light']) ?>
+        <?= "<?= " ?>Html::submitButton('Guardar', ['class' => $model->isNewRecord ? 'btn btn-lg btn-success' : 'btn btn-lg btn-primary']) ?>
     </div>
 
     <?= "<?php " ?>ActiveForm::end(); ?>
