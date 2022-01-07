@@ -180,7 +180,7 @@ $condition = '[' . implode(', ', $condition) . ']';
         foreach ($model as $key => $value) {
 
             $array['data'][] = [
-                            'id'     => $value->td_id,
+                            'td_id'     => $value->td_id,
                             'nombre' => $value->td_id,
                         ];
         }

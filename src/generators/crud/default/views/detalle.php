@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="float-right">
 
-                <?= "<?= " ?>Html::a('Nuevo <i class="fas fa-plus"></i>', ['nuevo', 'id' => $model->id], ['class' => 'btn btn-sm btn-success']) ?>
+                <?= "<?= " ?>Html::a('Nuevo <i class="fas fa-plus"></i>', ['nuevo'], ['class' => 'btn btn-sm btn-success']) ?>
                 <?= "<?= " ?>Html::a('Editar <i class="fas fa-edit"></i>', ['editar', 'id' => $model->id], ['class' => 'btn btn-sm btn-primary']) ?>
                 <?= "<?= " ?>Html::a('Anular <i class="fas fa-trash"></i>', ['anular', 'id' => $model->id], [
                     'class' => 'btn btn-sm btn-danger',

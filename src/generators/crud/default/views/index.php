@@ -31,19 +31,21 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
         <div class="card-body">
+            
+            <div class="table-responsive">
+                <table id="data_table" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Descripción</th>
+                            <th width="25%">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-            <table id="data_table" class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Descripción</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
 
         </div>
     </div>
@@ -61,52 +63,57 @@ $this->params['breadcrumbs'][] = $this->title;
 $js = <<<SCRIPT
 $(function () {
     $("#data_table").DataTable({
-      dom: `<"row"<"col-md-4 mb-2"l><"col-md-4 mb-2 mt-2 d-flex justify-content-center"f><"col-md-4 mb-2 d-flex justify-content-center"B>>
+        autoWidth: true,
+        responsive: true,
+        order: [[ 3, "desc" ]],
+        pageLength: 10,
+        dom: `<"row"<"col-md-4 mb-2"l><"col-md-4 mb-2 mt-2 d-flex justify-content-center"f><"col-md-4 mb-2 d-flex justify-content-center"B>>
                 <"row"<"col-md-12 d-flex justify-content-center mb-2 mt-2"p>>
                 <"row"<"col-sm-12"tr>>
                 <"row"<"col-sm-5"i><"col-sm-7"p>>
             `,
         buttons: [
-            // "copyHtml5",
             "excelHtml5",
-            // "csvHtml5",
             "pdfHtml5",
+            // "copyHtml5",
+            // "csvHtml5",
             // "colvis",
         ],
         "language": language,
-      // "responsive": true, "lengthChange": false, "autoWidth": false,
-      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-      "ajax": {
-        "url": "$urlBase/$controller/obtener-datos",
-    },
-    "columns": [
-    { "data": "id" },
-    { "data": "nombre" },
-    {
-        "render":
-            function (data, type, row) {
-                return `
-                        <a class="btn btn-sm btn-light" href="$detalle?id=`+row.id+`">Detalle <i class="fas fa-eye"></i></a>
-                        <a class="btn btn-sm btn-primary" href="$editar?id=`+row.id+`">Editar <i class="fas fa-edit"></i></a>
-                        <a class="btn btn-sm btn-danger" href="$anular?id=`+row.id+`" data-confirm="¿Está seguro de anular este registro?" data-method="post">Anular <i class="fas fa-trash"></i></a>
-                        `;
-            }, "className": "text-right"
+        "ajax": {
+            "url": "$urlBase/$controller/obtener-datos",
         },
-    ],
-    // }).buttons().container().appendTo("#example1_wrapper .col-md-6:eq(0)");
-    });
 
-    /*
-        $("#example2").DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-        });
-    */
+        "createdRow": function( row, data, dataIndex){
+            if(data.td_activo == "NO"){
+                // $(row).addClass("bg-danger");
+                $(row).css("background", "#F2DEDE");
+            }
+        },
+
+        "columns": [
+            { "data": "id" },
+            { "data": "nombre" },
+            {
+                "data": null,
+                "render":
+                    function (data, type, row) {
+                        let html = `
+                            <a class="btn btn-sm btn-light" href="$detalle?id=`+row.td_id+`">Detalle <i class="fas fa-eye"></i></a>
+                            <a class="btn btn-sm btn-primary" href="$editar?id=`+row.td_id+`">Editar <i class="fas fa-edit"></i></a>
+                            <a class="btn btn-sm btn-danger" href="$anular?id=`+row.td_id+`" data-confirm="¿Está seguro de anular este registro?" data-method="post">Anular <i class="fas fa-trash"></i></a>
+                            `;
+                        if(data.td_activo == "NO"){
+                            html = `
+                                    <a class="btn btn-sm btn-light" href="$detalle?id=`+row.td_id+`">Detalle <i class="fas fa-eye"></i></a>
+                                    <a class="btn btn-sm btn-primary" href="$editar?id=`+row.td_id+`">Editar <i class="fas fa-edit"></i></a>
+                                    <a class="btn btn-sm btn-warning" href="$activar?id=`+row.td_id+`" data-confirm="¿Está seguro de activar este registro?" data-method="post">Activar <i class="fas fa-check"></i></a>
+                                `;
+                        }
+                }, "className": "text-right"
+            },
+        ],
+    });
 
   });
 SCRIPT;' . PHP_EOL;
