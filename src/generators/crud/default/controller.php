@@ -171,7 +171,7 @@ $condition = '[' . implode(', ', $condition) . ']';
         throw new NotFoundHttpException(<?= $generator->generateString('La página solicitada no existe.') ?>);
     }
 
-    public function actionObtenerData()
+    public function actionObtenerDatos()
     {
         $model = <?= $modelClass ?>::find()->All();
 
