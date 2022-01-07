@@ -34,10 +34,22 @@ use yii\bootstrap4\ActiveForm;
     }
 } ?>
     <div class="form-group text-center">
-        <?= "<?= " ?>Html::a('Cerrar', ['index'], ['class' => 'btn btn-lg btn-light']) ?>
-        <?= "<?= " ?>Html::submitButton('Guardar', ['class' => $model->isNewRecord ? 'btn btn-lg btn-success' : 'btn btn-lg btn-primary']) ?>
+        <?= "<?= " ?>Html::a('Cerrar', ['index'], ['class' => 'btn btn-md btn-light']) ?>
+        <?= "<?= " ?>Html::submitButton('Guardar', ['class' => $model->isNewRecord ? 'btn btn-md btn-success' : 'btn btn-md btn-primary']) ?>
     </div>
 
     <?= "<?php " ?>ActiveForm::end(); ?>
 
 </div>
+
+<?= "<?php " ?>
+<?php $script = '
+$js = <<<SCRIPT
+$(function () {
+    $("#tipodocumento-td_nombre").focus();
+});
+SCRIPT;' . PHP_EOL;
+?>
+<?php echo $script; ?>
+<?php echo '$this->registerJs($js);' . PHP_EOL; ?>
+<?= "?>" ?>

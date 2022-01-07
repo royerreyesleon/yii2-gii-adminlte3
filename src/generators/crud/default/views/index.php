@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card">
         <div class="card-header">
 
-            <h3 class="card-title"><?= "<?= " ?>Html::encode($this->title) ?></h3>
+            <h3 class="card-title d-none d-sm-block"><?= "<?= " ?>Html::encode($this->title) ?></h3>
 
             <div class="float-right">
                 <?= "<?= " ?>Html::a('Nuevo <i class="fas fa-plus"></i>', ['nuevo'], ['class' => 'btn btn-sm btn-success']) ?>
@@ -72,6 +72,7 @@ $(function () {
                 <"row"<"col-sm-12"tr>>
                 <"row"<"col-sm-5"i><"col-sm-7"p>>
             `,
+        /*      
         buttons: [
             "excelHtml5",
             "pdfHtml5",
@@ -79,6 +80,29 @@ $(function () {
             // "csvHtml5",
             // "colvis",
         ],
+        */
+        buttons: {
+            buttons: [
+                {
+                    text: "Limpiar",
+                    action: function ( e, dt, node, config ) {
+                        // $("#data_table").DataTable().search("").draw();
+                        this.search("").draw();
+                        $("#data_table_filter input").focus();
+                    }
+                },
+                {
+                    text: "Recargar",
+                    action: function ( e, dt, node, config ) {
+                        window.location = "";
+                    },
+                },
+                // { extend: "excel", className: "btn btn-md btn-secondary", text: "Excel <i class="far fa-file"></i>" },
+                // { extend: "pdfHtml5", className: "btn btn-md btn-secondary", text: "PDF <i class="fas fa-file-pdf"></i>" },
+                { extend: "excel", className: "btn btn-md btn-secondary", text: "Excel" },
+                { extend: "pdfHtml5", className: "btn btn-md btn-secondary", text: "PDF" },
+            ]
+        },
         "language": language,
         "ajax": {
             "url": "$urlBase/$controller/obtener-datos",
@@ -113,6 +137,10 @@ $(function () {
                 }, "className": "text-right"
             },
         ],
+        initComplete: function() {
+            // $(".buttons-html5").addClass("btn-xs");
+            $("#data_table_filter input").focus();
+        },
     });
 
   });

@@ -29,6 +29,7 @@ echo "<?php\n";
 
 namespace <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) ?>;
 
+use Yii;
 use <?= ltrim($generator->modelClass, '\\') ?>;
 <?php if (!empty($generator->searchModelClass)): ?>
 use <?= ltrim($generator->searchModelClass, '\\') . (isset($searchModelAlias) ? " as $searchModelAlias" : "") ?>;
@@ -120,6 +121,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+                Yii::$app->session->setFlash('success', 'Registro guardado exitosamente');
                 return $this->redirect(['detalle', 'id' => $model->id]);
             }
         } else {
@@ -136,6 +138,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Registro modificado exitosamente');
             return $this->redirect(['detalle', 'id' => $model->id]);
         }
 
@@ -152,6 +155,17 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $model->activo = 'NO';
         $model->save();
 
+        Yii::$app->session->setFlash('success', 'Registro anulado exitosamente');
+        return $this->redirect(['index']);
+    }
+
+    public function actionActivar($id)
+    {   
+        $model = $this->findModel($id);
+        $model->activo = 'SI';
+        $model->save();
+
+        Yii::$app->session->setFlash('success', 'Registro activado exitosamente');
         return $this->redirect(['index']);
     }
 
