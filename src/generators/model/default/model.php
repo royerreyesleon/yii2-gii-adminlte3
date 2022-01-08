@@ -54,17 +54,23 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     }
 <?php endif; ?>
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [<?= empty($rules) ? '' : ("\n            " . implode(",\n            ", $rules) . ",\n        ") ?>];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->creado_por = Yii::$app->user->identity->username;
+            $this->fecha_creacion = date('Y-m-d H:m:s');
+        } else {
+            $this->actualizado_por = Yii::$app->user->identity->username;
+            $this->fecha_actualizacion = date('Y-m-d H:m:s');
+        }
+        return parent::beforeSave($insert);
+    }
+
     public function attributeLabels()
     {
         return [
