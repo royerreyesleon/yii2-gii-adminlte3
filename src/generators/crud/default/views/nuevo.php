@@ -22,10 +22,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="card">
         <div class="card-header">
-            <div class="d-flex justify-content-between">
-
-                <h3 class="card-title"><?= "<?= " ?>Html::encode($this->title) ?></h3>
-
+            <h3 class="card-title d-none d-sm-block"><?= "<?= " ?>Html::encode($this->title) ?></h3>
+            
+            <div class="float-right">
+                <?= "<?= " ?>Html::a('<i class="fas fa-arrow-left"></i>', ['index'], ['class' => 'btn btn-sm btn-secondary']) ?>
             </div>
         </div>
 
